@@ -1,0 +1,41 @@
+[gd_scene load_steps=4 format=3 uid="uid://cogmnesavp546"]
+
+[ext_resource type="Texture2D" uid="uid://cx6v84tfu1cd1" path="res://media/cell.png" id="1_b2lh3"]
+[ext_resource type="Script" uid="uid://b718sm7utfhwl" path="res://board_column.gd" id="1_oputh"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oputh"]
+size = Vector2(5.5, 140)
+
+[node name="BoardColumn" type="Area2D"]
+script = ExtResource("1_oputh")
+
+[node name="Cell" type="Sprite2D" parent="."]
+position = Vector2(36, 242)
+texture = ExtResource("1_b2lh3")
+
+[node name="Cell2" type="Sprite2D" parent="."]
+position = Vector2(36, 178)
+texture = ExtResource("1_b2lh3")
+
+[node name="Cell3" type="Sprite2D" parent="."]
+position = Vector2(36, 306)
+texture = ExtResource("1_b2lh3")
+
+[node name="Cell4" type="Sprite2D" parent="."]
+position = Vector2(36, 370)
+texture = ExtResource("1_b2lh3")
+
+[node name="Cell5" type="Sprite2D" parent="."]
+position = Vector2(36, 434)
+texture = ExtResource("1_b2lh3")
+
+[node name="Cell6" type="Sprite2D" parent="."]
+position = Vector2(36, 498)
+texture = ExtResource("1_b2lh3")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(35, 77)
+shape = SubResource("RectangleShape2D_oputh")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="area_exited" from="." to="." method="_on_area_exited"]

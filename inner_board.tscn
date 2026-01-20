@@ -1,0 +1,31 @@
+[gd_scene load_steps=2 format=3 uid="uid://0wexjjjqh8tk"]
+
+[ext_resource type="PackedScene" uid="uid://cogmnesavp546" path="res://board_column.tscn" id="1_cs00d"]
+
+[node name="InnerBoard" type="Node2D"]
+
+[node name="BoardColumn" parent="." instance=ExtResource("1_cs00d")]
+
+[node name="BoardColumn2" parent="." instance=ExtResource("1_cs00d")]
+position = Vector2(72, 0)
+column_id = 1
+
+[node name="BoardColumn3" parent="." instance=ExtResource("1_cs00d")]
+position = Vector2(144, 0)
+column_id = 2
+
+[node name="BoardColumn4" parent="." instance=ExtResource("1_cs00d")]
+position = Vector2(216, 0)
+column_id = 3
+
+[node name="BoardColumn5" parent="." instance=ExtResource("1_cs00d")]
+position = Vector2(288, 0)
+column_id = 4
+
+[node name="BoardColumn6" parent="." instance=ExtResource("1_cs00d")]
+position = Vector2(360, 0)
+column_id = 5
+
+[node name="BoardColumn7" parent="." instance=ExtResource("1_cs00d")]
+position = Vector2(432, 0)
+column_id = 6

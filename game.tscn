@@ -24,6 +24,7 @@ color = Color(0.1337946, 0.12346768, 0.3933907, 1)
 metadata/_edit_group_ = true
 
 [node name="InnerBoard" parent="." instance=ExtResource("1_80nbo")]
+z_index = 2
 position = Vector2(240, 97)
 metadata/_edit_group_ = true
 
@@ -32,6 +33,7 @@ position = Vector2(876, 578)
 texture = ExtResource("3_fc0e3")
 
 [node name="PlayerPiece" parent="." instance=ExtResource("3_feb5d")]
+z_index = 3
 position = Vector2(108, 578)
 
 [node name="Label" type="Label" parent="."]
@@ -42,4 +44,4 @@ offset_bottom = 83.0
 text = "Connect 4 Game!"
 label_settings = SubResource("LabelSettings_fc0e3")
 
-[connection signal="column_change" from="InnerBoard" to="." method="_on_inner_board_column_change"]
+[connection signal="released" from="PlayerPiece" to="." method="_on_player_piece_released"]

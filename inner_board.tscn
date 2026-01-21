@@ -6,43 +6,28 @@
 [node name="InnerBoard" type="Node2D"]
 script = ExtResource("1_gdsyh")
 
-[node name="BoardColumn" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 
-[node name="BoardColumn2" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn2" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 position = Vector2(72, 0)
 column_id = 1
 
-[node name="BoardColumn3" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn3" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 position = Vector2(144, 0)
 column_id = 2
 
-[node name="BoardColumn4" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn4" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 position = Vector2(216, 0)
 column_id = 3
 
-[node name="BoardColumn5" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn5" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 position = Vector2(288, 0)
 column_id = 4
 
-[node name="BoardColumn6" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn6" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 position = Vector2(360, 0)
 column_id = 5
 
-[node name="BoardColumn7" parent="." instance=ExtResource("1_cs00d")]
+[node name="BoardColumn7" parent="." groups=["columns"] instance=ExtResource("1_cs00d")]
 position = Vector2(432, 0)
 column_id = 6
-
-[connection signal="column_entered" from="BoardColumn" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn" to="." method="_on_board_column_column_exited"]
-[connection signal="column_entered" from="BoardColumn2" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn2" to="." method="_on_board_column_column_exited"]
-[connection signal="column_entered" from="BoardColumn3" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn3" to="." method="_on_board_column_column_exited"]
-[connection signal="column_entered" from="BoardColumn4" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn4" to="." method="_on_board_column_column_exited"]
-[connection signal="column_entered" from="BoardColumn5" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn5" to="." method="_on_board_column_column_exited"]
-[connection signal="column_entered" from="BoardColumn6" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn6" to="." method="_on_board_column_column_exited"]
-[connection signal="column_entered" from="BoardColumn7" to="." method="_on_board_column_column_entered"]
-[connection signal="column_exited" from="BoardColumn7" to="." method="_on_board_column_column_exited"]

@@ -30,7 +30,7 @@ func _ready() -> void:
 	radius = $RedPiece.get_rect().size.x / 2.0
 	
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	if state == State.BEING_DRAGGED:
 		var new_mouse_position = get_global_mouse_position()
 		var offset = new_mouse_position - mouse_position

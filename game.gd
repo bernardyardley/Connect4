@@ -16,7 +16,7 @@ func _ready() -> void:
 	current_piece = $PlayerPiece
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	pass
 
 func _on_player_piece_released() -> void:
@@ -29,15 +29,21 @@ func _on_player_piece_released() -> void:
 		# Centre the piece over the column
 		var target_x = column_zero_centre_x + $InnerBoard.column_width * current_column
 		current_piece.position.x = target_x
-		var target_y = $InnerBoard.column_top + $PlayerPiece.radius * 13.0
+		var multiplier = 13 - 2.0 * $InnerBoard.filled_cells[current_column]
+		var target_y = $InnerBoard.column_top + $PlayerPiece.radius * multiplier
 		current_piece.z_index = 1
 		tween.tween_property(current_piece, "position", Vector2(target_x, target_y), 1.0)
 		current_piece.state = $PlayerPiece.State.FINISHED
+		# Record that we've dropped there
+		$InnerBoard.play_to_column(current_column)
 		# Finally, spawn a new piece
 		var piece = player_piece.instantiate()
 		piece.position = piece_initial_position
 		piece.connect("released", _on_player_piece_released)
 		current_piece = piece
 		piece.z_index = 3
+		# Wait for the movement to stop
+		await tween.finished
+		$AudioStreamPlayer.play()
 		add_child(piece)
 		

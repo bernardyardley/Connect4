@@ -1,9 +1,10 @@
-[gd_scene load_steps=7 format=3 uid="uid://bo4qelb7kahfl"]
+[gd_scene load_steps=8 format=3 uid="uid://bo4qelb7kahfl"]
 
 [ext_resource type="PackedScene" uid="uid://0wexjjjqh8tk" path="res://inner_board.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://fit7fou8kqte" path="res://game.gd" id="1_fc0e3"]
 [ext_resource type="Texture2D" uid="uid://h5682b3qn3pj" path="res://media/yellow_piece.png" id="3_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://rmdkp1263x5t" path="res://player_piece.tscn" id="3_feb5d"]
+[ext_resource type="AudioStream" uid="uid://b01lb4h4hqcso" path="res://media/poker-chip-drop-38461.mp3" id="5_7jktm"]
 
 [sub_resource type="SystemFont" id="SystemFont_feb5d"]
 
@@ -43,5 +44,8 @@ offset_right = 925.0
 offset_bottom = 83.0
 text = "Connect 4 Game!"
 label_settings = SubResource("LabelSettings_fc0e3")
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_7jktm")
 
 [connection signal="released" from="PlayerPiece" to="." method="_on_player_piece_released"]

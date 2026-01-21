@@ -7,7 +7,8 @@ var radius: float
 enum State {
 	DRAGGABLE,		# Waiting to be dragged
 	BEING_DRAGGED,	# Being dragged
-	RELEASED		# Player has released the piece
+	RELEASED,		# Player has released the piece
+	FINISHED		# This piece won't be moved again
 }
 
 @export

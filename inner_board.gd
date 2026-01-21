@@ -1,8 +1,13 @@
 extends Node2D
 
+var column_width: float
+var column_top: float
+
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	pass
+	column_width = $BoardColumn.width
+	column_top = $BoardColumn.cell_top
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
 	pass

@@ -1,10 +1,11 @@
-[gd_scene load_steps=8 format=3 uid="uid://bo4qelb7kahfl"]
+[gd_scene load_steps=10 format=3 uid="uid://bo4qelb7kahfl"]
 
 [ext_resource type="PackedScene" uid="uid://0wexjjjqh8tk" path="res://inner_board.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://fit7fou8kqte" path="res://game.gd" id="1_fc0e3"]
 [ext_resource type="Texture2D" uid="uid://h5682b3qn3pj" path="res://media/yellow_piece.png" id="3_fc0e3"]
 [ext_resource type="PackedScene" uid="uid://rmdkp1263x5t" path="res://player_piece.tscn" id="3_feb5d"]
 [ext_resource type="AudioStream" uid="uid://b01lb4h4hqcso" path="res://media/poker-chip-drop-38461.mp3" id="5_7jktm"]
+[ext_resource type="Script" uid="uid://nauy538xcqwf" path="res://yellow_path_follow.gd" id="5_ryrav"]
 
 [sub_resource type="SystemFont" id="SystemFont_feb5d"]
 
@@ -12,6 +13,12 @@
 font = SubResource("SystemFont_feb5d")
 font_size = 32
 font_color = Color(0.64556354, 0.6273316, 0.920028, 1)
+
+[sub_resource type="Curve2D" id="Curve2D_7jktm"]
+_data = {
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, -5.785124, 88.42975, 5.785124, -88.42975, -14, -267, 0, 0, 0, 0, -169, -412)
+}
+point_count = 3
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_fc0e3")
@@ -29,10 +36,6 @@ z_index = 2
 position = Vector2(240, 97)
 metadata/_edit_group_ = true
 
-[node name="YellowPiece" type="Sprite2D" parent="."]
-position = Vector2(876, 578)
-texture = ExtResource("3_fc0e3")
-
 [node name="PlayerPiece" parent="." instance=ExtResource("3_feb5d")]
 z_index = 3
 position = Vector2(108, 578)
@@ -48,4 +51,19 @@ label_settings = SubResource("LabelSettings_fc0e3")
 [node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="."]
 stream = ExtResource("5_7jktm")
 
+[node name="YellowPath" type="Path2D" parent="."]
+position = Vector2(876, 578)
+curve = SubResource("Curve2D_7jktm")
+
+[node name="YellowPathFollow" type="PathFollow2D" parent="YellowPath"]
+rotation = -1.6811436
+rotates = false
+script = ExtResource("5_ryrav")
+
+[node name="YellowPiece" type="Sprite2D" parent="YellowPath/YellowPathFollow"]
+rotation = 1.6811436
+scale = Vector2(1.0000001, 1.0000001)
+texture = ExtResource("3_fc0e3")
+
 [connection signal="released" from="PlayerPiece" to="." method="_on_player_piece_released"]
+[connection signal="finished" from="YellowPath/YellowPathFollow" to="." method="_on_yellow_path_follow_finished"]

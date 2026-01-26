@@ -6,9 +6,9 @@ var column_zero_centre_x: float
 var player_piece: Resource
 var current_piece
 var yellow_piece: Sprite2D
-var rng = RandomNumberGenerator.new()
 var ai_wrapper_script = load("res://AiWrapper.cs")
 var ai_wrapper = ai_wrapper_script.new(1000, 1.414)
+var player_column: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -27,6 +27,7 @@ func _process(_delta: float) -> void:
 
 func _on_player_piece_released() -> void:
 	var current_column = $InnerBoard.get_current_column()
+	player_column = current_column
 	var tween: Tween = create_tween()
 	if current_column == -1:
 		tween.tween_property(current_piece, "position", piece_initial_position, 0.5)
@@ -70,7 +71,7 @@ func _on_yellow_path_follow_finished() -> void:
 	add_child(sprite)
 	yellow_piece.hide()
 	# Move the piece to over a random column
-	var target_column: int = rng.randi_range(0, 6)
+	var target_column: int = ai_wrapper.GetResponse(player_column)
 	var target_x = get_column_centre_x(target_column)
 	var target_y = sprite.position.y
 	var tween: Tween = create_tween()

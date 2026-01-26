@@ -7,6 +7,8 @@ var player_piece: Resource
 var current_piece
 var yellow_piece: Sprite2D
 var rng = RandomNumberGenerator.new()
+var ai_wrapper_script = load("res://AiWrapper.cs")
+var ai_wrapper = ai_wrapper_script.new(1000, 1.414)
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -17,6 +19,7 @@ func _ready() -> void:
 	player_piece = preload("res://player_piece.tscn")
 	current_piece = $PlayerPiece
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
+	print(ai_wrapper.GameOver)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://bo4qelb7kahfl"]
+[gd_scene load_steps=11 format=3 uid="uid://bo4qelb7kahfl"]
 
 [ext_resource type="PackedScene" uid="uid://0wexjjjqh8tk" path="res://inner_board.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://fit7fou8kqte" path="res://game.gd" id="1_fc0e3"]
@@ -6,6 +6,7 @@
 [ext_resource type="PackedScene" uid="uid://rmdkp1263x5t" path="res://player_piece.tscn" id="3_feb5d"]
 [ext_resource type="AudioStream" uid="uid://b01lb4h4hqcso" path="res://media/poker-chip-drop-38461.mp3" id="5_7jktm"]
 [ext_resource type="Script" uid="uid://nauy538xcqwf" path="res://yellow_path_follow.gd" id="5_ryrav"]
+[ext_resource type="Script" uid="uid://4x358ufk7rg6" path="res://AiWrapper.cs" id="7_eow3j"]
 
 [sub_resource type="SystemFont" id="SystemFont_feb5d"]
 
@@ -64,6 +65,9 @@ script = ExtResource("5_ryrav")
 rotation = 1.6811436
 scale = Vector2(1.0000001, 1.0000001)
 texture = ExtResource("3_fc0e3")
+
+[node name="AiWrapper" type="Node" parent="."]
+script = ExtResource("7_eow3j")
 
 [connection signal="released" from="PlayerPiece" to="." method="_on_player_piece_released"]
 [connection signal="finished" from="YellowPath/YellowPathFollow" to="." method="_on_yellow_path_follow_finished"]

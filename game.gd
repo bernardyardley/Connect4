@@ -8,7 +8,13 @@ var current_piece
 var yellow_piece: Sprite2D
 var ai_wrapper_script = load("res://AiWrapper.cs")
 var ai_wrapper = ai_wrapper_script.new(1000, 1.414)
+
+# Game play variables
 var player_column: int
+var computer_column: int
+var game_over: bool
+var winner: int
+var human_player: int
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -19,7 +25,7 @@ func _ready() -> void:
 	player_piece = preload("res://player_piece.tscn")
 	current_piece = $PlayerPiece
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
-	print(ai_wrapper.GameOver)
+	human_player = 1
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -50,7 +56,17 @@ func _on_player_piece_released() -> void:
 		do_computer_move()
 		
 func do_computer_move() -> void:
-	# The next line will move it to the top of the board, we then wait for it to finish
+	# Get the computer's response; this also detects if the player has won
+	computer_column = ai_wrapper.GetResponse(player_column)
+	# If the game is over but the computer has won, we'll still need to move its piece
+	if ai_wrapper.GameOver:
+		winner = ai_wrapper.Winner
+		game_over = true
+		if winner == human_player:
+			$Label.text = "You won!"
+			return
+	
+	# Otherwise, continue with the gane
 	$YellowPath/YellowPathFollow.move_computer_piece()
 
 func spawn_new_player_piece():
@@ -70,8 +86,9 @@ func _on_yellow_path_follow_finished() -> void:
 	sprite.global_position = yellow_piece.global_position
 	add_child(sprite)
 	yellow_piece.hide()
-	# Move the piece to over a random column
-	var target_column: int = ai_wrapper.GetResponse(player_column)
+	# Use the AI to decide where to move to
+	var target_column: int = computer_column
+	# At this stage, the game could be over - so this should happen sooner
 	var target_x = get_column_centre_x(target_column)
 	var target_y = sprite.position.y
 	var tween: Tween = create_tween()
@@ -82,6 +99,14 @@ func _on_yellow_path_follow_finished() -> void:
 	# Record that we've played to that column
 	$InnerBoard.play_to_column(target_column)
 	$AudioStreamPlayer.play()
+	
+	# If the game is over, don't respawn the piece
+	if game_over:
+		if winner == 0:
+			$Label.text = "It was a draw!"
+		else:
+			$Label.text = "The computer won!"
+		return
 	
 	# Put the pieces back where they were
 	spawn_new_player_piece()

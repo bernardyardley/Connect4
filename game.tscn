@@ -17,9 +17,9 @@ font_color = Color(0.64556354, 0.6273316, 0.920028, 1)
 
 [sub_resource type="Curve2D" id="Curve2D_7jktm"]
 _data = {
-"points": PackedVector2Array(0, 0, 0, 0, 0, 0, -5.785124, 88.42975, 5.785124, -88.42975, -14, -267, 0, 0, 0, 0, -169, -412)
+"points": PackedVector2Array(0, 0, 0, 0, 0, 0, -5.785124, 88.42975, 5.785124, -88.42975, -14, -267, 0, 0, 0, 0, -169, -412, 0, 0, 0, 0, -602, -412)
 }
-point_count = 3
+point_count = 4
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_fc0e3")

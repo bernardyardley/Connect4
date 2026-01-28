@@ -3,8 +3,6 @@ extends Node2D
 var piece_radius: float
 var piece_initial_position: Vector2
 var column_zero_centre_x: float
-var player_piece: Resource
-var current_piece
 var yellow_piece: Sprite2D
 var ai_wrapper_script = load("res://AiWrapper.cs")
 var ai_wrapper = ai_wrapper_script.new(1000, 1.414)
@@ -22,8 +20,6 @@ func _ready() -> void:
 	piece_initial_position = $PlayerPiece.position
 	# Get the x value of the centre of column 0
 	column_zero_centre_x = $InnerBoard.position.x + $InnerBoard.column_width / 2.0
-	player_piece = preload("res://player_piece.tscn")
-	current_piece = $PlayerPiece
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
 	human_player = 1
 
@@ -36,25 +32,33 @@ func _on_player_piece_released() -> void:
 	player_column = current_column
 	var tween: Tween = create_tween()
 	if current_column == -1:
-		tween.tween_property(current_piece, "position", piece_initial_position, 0.5)
-		current_piece.state = $PlayerPiece.State.DRAGGABLE
+		tween.tween_property($PlayerPiece, "position", piece_initial_position, 0.5)
+		$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
 	else:
 		# Centre the piece over the column
 		var target_x = get_column_centre_x(current_column)
-		current_piece.position.x = target_x
 		var target_y = get_empty_cell_y(current_column)
-		current_piece.z_index = 1
-		tween.tween_property(current_piece, "position", Vector2(target_x, target_y), 1.0)
-		current_piece.state = $PlayerPiece.State.FINISHED
+		$PlayerPiece.hide()
+		drop_piece($PlayerPiece.position, Vector2(target_x, target_y), $PlayerPiece/RedPiece.texture)
 		# Record that we've dropped there
 		$InnerBoard.play_to_column(current_column)
-		# Wait for the movement to stop
-		await tween.finished
-		$AudioStreamPlayer.play()		
 		
 		# Do the computer's move
 		do_computer_move()
 		
+func drop_piece(from: Vector2, to: Vector2, texture: Texture2D) -> void:
+	# Create a sprite on the from location with the relevant texture
+	var sprite = Sprite2D.new()
+	sprite.texture = texture
+	sprite.position = Vector2(to.x, from.y)
+	sprite.z_index = 1
+	add_child(sprite)
+	var tween: Tween = create_tween()
+	tween.tween_property(sprite, "position", to, 0.5)
+	await tween.finished
+	# Record that we've played to that column
+	$AudioStreamPlayer.play()
+
 func do_computer_move() -> void:
 	# Get the computer's response; this also detects if the player has won
 	computer_column = ai_wrapper.GetResponse(player_column)
@@ -67,38 +71,22 @@ func do_computer_move() -> void:
 			return
 	
 	# Otherwise, continue with the gane
-	$YellowPath/YellowPathFollow.move_computer_piece()
+	$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
 
 func spawn_new_player_piece():
-	var piece = player_piece.instantiate()
-	piece.position = piece_initial_position
-	piece.connect("released", _on_player_piece_released)
-	current_piece = piece
-	piece.z_index = 3
-	add_child(piece)
+	$PlayerPiece.position = piece_initial_position
+	$PlayerPiece.show()
 
 # This function is called when the computer's piece has moved to the top of the board
 # The code does not follow the DRY principle and should be improved
 func _on_yellow_path_follow_finished() -> void:
-	# We'll create a Sprite that looks like the computer piece
-	var sprite = Sprite2D.new()
-	sprite.texture = load("res://media/yellow_piece.png")
-	sprite.global_position = yellow_piece.global_position
-	add_child(sprite)
-	yellow_piece.hide()
 	# Use the AI to decide where to move to
-	var target_column: int = computer_column
-	# At this stage, the game could be over - so this should happen sooner
-	var target_x = get_column_centre_x(target_column)
-	var target_y = sprite.position.y
-	var tween: Tween = create_tween()
-	tween.tween_property(sprite, "position", Vector2(target_x, target_y), 0.5)
-	target_y = get_empty_cell_y(target_column)
-	tween.tween_property(sprite, "position", Vector2(target_x, target_y), 0.5)
-	await tween.finished
+	var target_x = get_column_centre_x(computer_column)
+	var target_y = get_empty_cell_y(computer_column)
+	yellow_piece.hide()
+	drop_piece(yellow_piece.global_position, Vector2(target_x, target_y), yellow_piece.texture)
 	# Record that we've played to that column
-	$InnerBoard.play_to_column(target_column)
-	$AudioStreamPlayer.play()
+	$InnerBoard.play_to_column(computer_column)
 	
 	# If the game is over, don't respawn the piece
 	if game_over:
@@ -112,6 +100,7 @@ func _on_yellow_path_follow_finished() -> void:
 	spawn_new_player_piece()
 	$YellowPath/YellowPathFollow.progress_ratio = 0.0
 	yellow_piece.show()
+	$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
 
 func get_column_centre_x(col: int) -> float:
 	return column_zero_centre_x + $InnerBoard.column_width * col

@@ -5,7 +5,8 @@ var piece_initial_position: Vector2
 var column_zero_centre_x: float
 var yellow_piece: Sprite2D
 var ai_wrapper_script = load("res://AiWrapper.cs")
-var ai_wrapper = ai_wrapper_script.new(1000, 1.414)
+var ai_wrapper = ai_wrapper_script.new(100000, 1.414)
+var label_text: String = "Connect 4"
 
 # Game play variables
 var player_column: int
@@ -22,10 +23,11 @@ func _ready() -> void:
 	column_zero_centre_x = $InnerBoard.position.x + $InnerBoard.column_width / 2.0
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
 	human_player = 1
+	label_text = "Your turn (red player)"
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
-	pass
+	%Label.text = label_text
 
 func _on_player_piece_released() -> void:
 	var current_column = $InnerBoard.get_current_column()
@@ -39,10 +41,9 @@ func _on_player_piece_released() -> void:
 		var target_x = get_column_centre_x(current_column)
 		var target_y = get_empty_cell_y(current_column)
 		$PlayerPiece.hide()
-		drop_piece($PlayerPiece.position, Vector2(target_x, target_y), $PlayerPiece/RedPiece.texture)
+		await drop_piece($PlayerPiece.position, Vector2(target_x, target_y), $PlayerPiece/RedPiece.texture)
 		# Record that we've dropped there
 		$InnerBoard.play_to_column(current_column)
-		
 		# Do the computer's move
 		do_computer_move()
 		
@@ -67,15 +68,17 @@ func do_computer_move() -> void:
 		winner = ai_wrapper.Winner
 		game_over = true
 		if winner == human_player:
-			$Label.text = "You won!"
+			label_text = "You won!"
 			return
 	
+	label_text = "The computer is playing to column " + str(computer_column + 1)
 	# Otherwise, continue with the gane
 	$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
 
 func spawn_new_player_piece():
 	$PlayerPiece.position = piece_initial_position
 	$PlayerPiece.show()
+	label_text = "Your turn (red player)"
 
 # This function is called when the computer's piece has moved to the top of the board
 # The code does not follow the DRY principle and should be improved
@@ -84,16 +87,16 @@ func _on_yellow_path_follow_finished() -> void:
 	var target_x = get_column_centre_x(computer_column)
 	var target_y = get_empty_cell_y(computer_column)
 	yellow_piece.hide()
-	drop_piece(yellow_piece.global_position, Vector2(target_x, target_y), yellow_piece.texture)
+	await drop_piece(yellow_piece.global_position, Vector2(target_x, target_y), yellow_piece.texture)
 	# Record that we've played to that column
 	$InnerBoard.play_to_column(computer_column)
 	
 	# If the game is over, don't respawn the piece
 	if game_over:
 		if winner == 0:
-			$Label.text = "It was a draw!"
+			label_text = "It was a draw!"
 		else:
-			$Label.text = "The computer won!"
+			label_text = "The computer won!"
 		return
 	
 	# Put the pieces back where they were

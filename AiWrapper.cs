@@ -1,3 +1,4 @@
+#nullable enable
 using Connect4GameEngine;
 using Godot;
 using System;
@@ -92,6 +93,5 @@ public partial class AiWrapper(int iterations, double temperature) : Node
 
         // Calculate the best response from this new node
         GetBestMoveAsync(newNode);
-        return;
     }
 }

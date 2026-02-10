@@ -1,4 +1,4 @@
-[gd_scene load_steps=11 format=3 uid="uid://bo4qelb7kahfl"]
+[gd_scene load_steps=12 format=3 uid="uid://bo4qelb7kahfl"]
 
 [ext_resource type="PackedScene" uid="uid://0wexjjjqh8tk" path="res://inner_board.tscn" id="1_80nbo"]
 [ext_resource type="Script" uid="uid://fit7fou8kqte" path="res://game.gd" id="1_fc0e3"]
@@ -20,6 +20,8 @@ point_count = 4
 font = SubResource("SystemFont_feb5d")
 font_size = 32
 font_color = Color(0.64556354, 0.6273316, 0.920028, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_eow3j"]
 
 [node name="Game" type="Node2D"]
 script = ExtResource("1_fc0e3")
@@ -67,6 +69,7 @@ offset_bottom = 102.0
 size_flags_horizontal = 3
 
 [node name="ComputerScore" type="Label" parent="HBoxContainer"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 0
 theme_override_fonts/font = SubResource("SystemFont_feb5d")
@@ -93,11 +96,23 @@ layout_mode = 2
 alignment = 2
 
 [node name="PlayerScore" type="Label" parent="HBoxContainer/HBoxContainerRight"]
+unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 8
 text = "Player: 0 "
 label_settings = SubResource("LabelSettings_fc0e3")
 horizontal_alignment = 2
 
+[node name="StartAgainButton" type="Button" parent="."]
+modulate = Color(0.6420734, 0.42585656, 0.63407683, 1)
+offset_left = 524.0
+offset_top = 144.0
+offset_right = 624.0
+offset_bottom = 190.0
+theme_override_colors/font_color = Color(0.060287938, 0.2130878, 0.25134334, 1)
+theme_override_styles/normal = SubResource("StyleBoxFlat_eow3j")
+text = "Play Again"
+
 [connection signal="released" from="PlayerPiece" to="." method="_on_player_piece_released"]
 [connection signal="finished" from="YellowPath/YellowPathFollow" to="." method="_on_yellow_path_follow_finished"]
+[connection signal="pressed" from="StartAgainButton" to="." method="_on_start_again_button_pressed"]

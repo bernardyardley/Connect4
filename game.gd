@@ -5,15 +5,15 @@ var piece_initial_position: Vector2
 var column_zero_centre_x: float
 var yellow_piece: Sprite2D
 var ai_wrapper_script = load("res://AiWrapper.cs")
-var ai_wrapper = ai_wrapper_script.new(100000, 1.414)
-var computer_starts: bool = true
+var ai_wrapper = ai_wrapper_script.new(10000, 1.414)
 
 # Game play variables
 var player_column: int
 var computer_column: int
-var game_over: bool
 var winner: int
-var human_player: int
+var human_player: int = 1
+var computer_wins:int = 0
+var human_wins:int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
@@ -23,12 +23,10 @@ func _ready() -> void:
 	# Get the x value of the centre of column 0
 	column_zero_centre_x = $InnerBoard.position.x + $InnerBoard.column_width / 2.0
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
-	if computer_starts:
-		human_player = -1
-		ai_wrapper.GetFirstMove()
-	else:
-		human_player = 1
-		%Label.text = "Your turn (red player)"
+	human_player = 1
+	%Label.text = "You start (red player)"
+	# Hide the new game button
+	$StartAgainButton.hide()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
@@ -37,9 +35,10 @@ func _process(_delta: float) -> void:
 func _on_player_piece_released() -> void:
 	var current_column = $InnerBoard.get_current_column()
 	player_column = current_column
-	var tween: Tween = create_tween()
 	if current_column == -1:
+		var tween: Tween = create_tween()
 		tween.tween_property($PlayerPiece, "position", piece_initial_position, 0.5)
+		await tween.finished
 		$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
 	else:
 		# Centre the piece over the column
@@ -71,14 +70,15 @@ func do_computer_move() -> void:
 	# If the game is over but the computer has won, we'll still need to move its piece
 	if ai_wrapper.GameOver:
 		winner = ai_wrapper.Winner
-		game_over = true
 		if winner == human_player:
 			%Label.text = "You won!"
-			return
-	
-	%Label.text = "The computer is playing to column " + str(computer_column + 1)
-	# Otherwise, continue with the gane
-	$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
+			human_wins += 1
+			%PlayerScore.text = "Player: " + str(human_wins) + " "
+		offer_new_game()
+	else:
+		%Label.text = "The computer is playing to column " + str(computer_column + 1)
+		# Otherwise, continue with the gane
+		$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
 
 func spawn_new_player_piece():
 	$PlayerPiece.position = piece_initial_position
@@ -97,18 +97,24 @@ func _on_yellow_path_follow_finished() -> void:
 	$InnerBoard.play_to_column(computer_column)
 	
 	# If the game is over, don't respawn the piece
-	if game_over:
+	if ai_wrapper.GameOver:
 		if winner == 0:
 			%Label.text = "It was a draw!"
 		else:
 			%Label.text = "The computer won!"
-		return
-	
-	# Put the pieces back where they were
-	spawn_new_player_piece()
-	$YellowPath/YellowPathFollow.progress_ratio = 0.0
-	yellow_piece.show()
-	$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
+			computer_wins += 1
+			%ComputerScore.text = " Computer: " + str(computer_wins)
+		offer_new_game()
+	else:
+		# Put the pieces back where they were
+		spawn_new_player_piece()
+		$YellowPath/YellowPathFollow.progress_ratio = 0.0
+		yellow_piece.show()
+		$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
+
+func offer_new_game():
+	$StartAgainButton.show()
+	print("Offer new game entered")
 
 func get_column_centre_x(col: int) -> float:
 	return column_zero_centre_x + $InnerBoard.column_width * col
@@ -121,3 +127,6 @@ func get_empty_cell_y(col: int) -> float:
 func _on_ai_wrapper_move_calculated(move: int) -> void:
 	computer_column = move
 	do_computer_move()
+
+func _on_start_again_button_pressed() -> void:
+	print("Button clicked")

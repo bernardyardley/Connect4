@@ -10,7 +10,7 @@ signal finished
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if current_speed > 0.0:
+	if current_speed > 0.01:
 		progress_ratio = min(1.0, progress_ratio + delta * speed)
 		if global_position.x <= target_x:
 			current_speed = 0.0

@@ -67,18 +67,9 @@ func drop_piece(from: Vector2, to: Vector2, texture: Texture2D) -> void:
 	$AudioStreamPlayer.play()
 
 func do_computer_move() -> void:
-	# If the game is over but the computer has won, we'll still need to move its piece
-	if ai_wrapper.GameOver:
-		winner = ai_wrapper.Winner
-		if winner == human_player:
-			%Label.text = "You won!"
-			human_wins += 1
-			%PlayerScore.text = "Player: " + str(human_wins) + " "
-		offer_new_game()
-	else:
-		%Label.text = "The computer is playing to column " + str(computer_column + 1)
-		# Otherwise, continue with the gane
-		$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
+	%Label.text = "The computer is playing to column " + str(computer_column + 1)
+	# Otherwise, continue with the gane
+	$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
 
 func spawn_new_player_piece():
 	$PlayerPiece.position = piece_initial_position
@@ -86,7 +77,6 @@ func spawn_new_player_piece():
 	%Label.text = "Your turn (red player)"
 
 # This function is called when the computer's piece has moved to the top of the board
-# The code does not follow the DRY principle and should be improved
 func _on_yellow_path_follow_finished() -> void:
 	# Use the AI to decide where to move to
 	var target_x = get_column_centre_x(computer_column)
@@ -95,26 +85,29 @@ func _on_yellow_path_follow_finished() -> void:
 	await drop_piece(yellow_piece.global_position, Vector2(target_x, target_y), yellow_piece.texture)
 	# Record that we've played to that column
 	$InnerBoard.play_to_column(computer_column)
-	
+	spawn_new_player_piece()
 	# If the game is over, don't respawn the piece
 	if ai_wrapper.GameOver:
-		if winner == 0:
-			%Label.text = "It was a draw!"
-		else:
-			%Label.text = "The computer won!"
-			computer_wins += 1
-			%ComputerScore.text = " Computer: " + str(computer_wins)
-		offer_new_game()
+		game_over()
 	else:
 		# Put the pieces back where they were
-		spawn_new_player_piece()
 		$YellowPath/YellowPathFollow.progress_ratio = 0.0
 		yellow_piece.show()
 		$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
 
-func offer_new_game():
+func game_over():
+	winner = ai_wrapper.Winner
+	if winner == 0:
+		%Label.text = "It was a draw!"
+	elif winner == human_player:
+		%Label.text = "You won!"
+		human_wins += 1
+		%PlayerScore.text = "Player: " + str(human_wins) + " "
+	else:
+		%Label.text = "The computer won!"
+		computer_wins += 1
+		%ComputerScore.text = " Computer: " + str(computer_wins)
 	$StartAgainButton.show()
-	print("Offer new game entered")
 
 func get_column_centre_x(col: int) -> float:
 	return column_zero_centre_x + $InnerBoard.column_width * col

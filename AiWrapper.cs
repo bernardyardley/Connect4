@@ -71,6 +71,7 @@ public partial class AiWrapper(int iterations, double temperature) : Node
                 if (child.GameState.GameOver)
                 {
                     RootNode = child;
+                    EmitSignal(SignalName.MoveCalculated, -1);
                     return;
                 }
                 // Remove the child's parent reference to free memory
@@ -88,7 +89,7 @@ public partial class AiWrapper(int iterations, double temperature) : Node
         if (gameStateAfterPlayerMove.GameOver)
         {
             RootNode = newNode;
-            EmitSignal(nameof(MoveCalculatedEventHandler), -1);
+            EmitSignal(SignalName.MoveCalculated, -1);
         }
 
         // Calculate the best response from this new node

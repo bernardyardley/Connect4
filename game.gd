@@ -48,9 +48,8 @@ func _on_player_piece_released() -> void:
 		await drop_piece($PlayerPiece.position, Vector2(target_x, target_y), $PlayerPiece/RedPiece.texture)
 		# Record that we've dropped there
 		$InnerBoard.play_to_column(current_column)
-		# Do the computer's move
+		# Do the computer's move - this also detects if the game is over
 		%Label.text = "The computer is thinking..."
-		# Get the computer's response; this also detects if the player has won
 		ai_wrapper.GetResponse(player_column)
 		
 func drop_piece(from: Vector2, to: Vector2, texture: Texture2D) -> void:
@@ -72,7 +71,7 @@ func do_computer_move() -> void:
 	$YellowPath/YellowPathFollow.move_computer_piece(get_column_centre_x(computer_column))
 
 func spawn_new_player_piece():
-	$PlayerPiece.position = piece_initial_position
+	$PlayerPiece.position = piece_initial_position # Put it back, but hidden
 	$PlayerPiece.show()
 	%Label.text = "Your turn (red player)"
 
@@ -119,7 +118,10 @@ func get_empty_cell_y(col: int) -> float:
 
 func _on_ai_wrapper_move_calculated(move: int) -> void:
 	computer_column = move
-	do_computer_move()
+	if move >= 0:
+		do_computer_move()
+	else:
+		game_over()
 
 func _on_start_again_button_pressed() -> void:
 	print("Button clicked")

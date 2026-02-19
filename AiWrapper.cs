@@ -28,6 +28,11 @@ public partial class AiWrapper(int iterations, double temperature) : Node
         }
     }
 
+    /// <summary>
+    /// Get the computer's move when it is starting
+    /// </summary>
+    /// <exception cref="InvalidOperationException">Raises an exception if the game
+    /// has already begun</exception>
     public void GetFirstMove()
     {
         if (RootNode != null)
@@ -40,7 +45,7 @@ public partial class AiWrapper(int iterations, double temperature) : Node
         GetBestMoveAsync(node);
     }
 
-    public void GetBestMoveAsync(Connect4Node node)
+    private void GetBestMoveAsync(Connect4Node node)
     {
         // Run MCTS in a separate thread to avoid blocking the main thread
         System.Threading.Tasks.Task.Run(() =>
@@ -51,6 +56,10 @@ public partial class AiWrapper(int iterations, double temperature) : Node
         });
     }
 
+    /// <summary>
+    /// Get the response to the player's move (which may be the first move of the game)
+    /// </summary>
+    /// <param name="playerMove">The column (zero based) where the player played</param>
     public void GetResponse(int playerMove)
     {
         if (RootNode == null)
@@ -95,4 +104,9 @@ public partial class AiWrapper(int iterations, double temperature) : Node
         // Calculate the best response from this new node
         GetBestMoveAsync(newNode);
     }
+
+    /// <summary>
+    /// Start a new game
+    /// </summary>
+    public void Reset() => RootNode = null;
 }

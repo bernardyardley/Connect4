@@ -6,6 +6,7 @@ var column_zero_centre_x: float
 var yellow_piece: Sprite2D
 var ai_wrapper_script = load("res://AiWrapper.cs")
 var ai_wrapper = ai_wrapper_script.new(10000, 1.414)
+var played_pieces = []
 
 # Game play variables
 var player_column: int
@@ -24,13 +25,16 @@ func _ready() -> void:
 	column_zero_centre_x = $InnerBoard.position.x + $InnerBoard.column_width / 2.0
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
 	human_player = 1
-	%Label.text = "You start (red player)"
-	# Hide the new game button
 	$StartAgainButton.hide()
+	start_human()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	pass
+
+func start_human() -> void:
+	%Label.text = "You start (red player)"
+	$PlayerPiece.state = $PlayerPiece.State.DRAGGABLE
 
 func _on_player_piece_released() -> void:
 	var current_column = $InnerBoard.get_current_column()
@@ -55,6 +59,7 @@ func _on_player_piece_released() -> void:
 func drop_piece(from: Vector2, to: Vector2, texture: Texture2D) -> void:
 	# Create a sprite on the from location with the relevant texture
 	var sprite = Sprite2D.new()
+	played_pieces.append(sprite)
 	sprite.texture = texture
 	sprite.position = Vector2(to.x, from.y)
 	sprite.z_index = 1
@@ -124,4 +129,23 @@ func _on_ai_wrapper_move_calculated(move: int) -> void:
 		game_over()
 
 func _on_start_again_button_pressed() -> void:
-	print("Button clicked")
+	# Clear the board
+	while played_pieces:
+		var piece = played_pieces.pop_back()
+		piece.queue_free()
+	$InnerBoard.reset()
+	# Swap starting player
+	human_player = -human_player
+	# Restart the AU
+	ai_wrapper.Reset()
+		# Hide the new game button
+	$StartAgainButton.hide()
+	$PlayerPiece.position = piece_initial_position
+	$PlayerPiece.show()
+	if human_player == 1:
+		start_human()
+	else:
+		$PlayerPiece.state = $PlayerPiece.State.RELEASED
+		%Label.text = "The computer is thinking..."
+		ai_wrapper.GetFirstMove()
+	

@@ -26,7 +26,8 @@ func _ready() -> void:
 	yellow_piece = $YellowPath/YellowPathFollow/YellowPiece
 	human_player = 1
 	$StartAgainButton.hide()
-	start_human()
+	$PlayerPiece.state = $PlayerPiece.State.FINISHED
+	#start_human()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

@@ -1,42 +1,184 @@
-[gd_scene load_steps=3 format=3 uid="uid://dcy2yfbm1npk8"]
+[gd_scene load_steps=10 format=3 uid="uid://dcy2yfbm1npk8"]
 
 [ext_resource type="Script" uid="uid://c6b5oxn1qaxtl" path="res://top_level_node.gd" id="1_731rl"]
 [ext_resource type="PackedScene" uid="uid://bo4qelb7kahfl" path="res://game.tscn" id="2_uufrn"]
+[ext_resource type="Script" uid="uid://eegy0jm3i7q6" path="res://start_menu.gd" id="3_uufrn"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_731rl"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_uufrn"]
+
+[sub_resource type="ButtonGroup" id="ButtonGroup_q0rm3"]
+
+[sub_resource type="Animation" id="Animation_uufrn"]
+resource_name = "new_animation"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("StartMenu/PanelContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 1), Color(0, 0, 0, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("StartMenu:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 1,
+"values": [true, false]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Game:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Color(0.5, 0.5, 0.5, 1), Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_q0rm3"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("StartMenu/PanelContainer:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("StartMenu:visible")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [true]
+}
+tracks/2/type = "value"
+tracks/2/imported = false
+tracks/2/enabled = true
+tracks/2/path = NodePath("Game:modulate")
+tracks/2/interp = 1
+tracks/2/loop_wrap = true
+tracks/2/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(1, 1, 1, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_6lwxe"]
+_data = {
+&"RESET": SubResource("Animation_q0rm3"),
+&"new_animation": SubResource("Animation_uufrn")
+}
 
 [node name="TopLevelNode" type="Node"]
 script = ExtResource("1_731rl")
 
 [node name="Game" parent="." instance=ExtResource("2_uufrn")]
 
-[node name="CanvasLayer" type="CanvasLayer" parent="."]
+[node name="StartMenu" type="CanvasLayer" parent="."]
+script = ExtResource("3_uufrn")
 
-[node name="PanelContainer" type="PanelContainer" parent="CanvasLayer"]
+[node name="PanelContainer" type="PanelContainer" parent="StartMenu"]
 offset_top = 223.0
 offset_right = 1152.0
 offset_bottom = 223.0
 
-[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/PanelContainer"]
+[node name="VBoxContainer" type="VBoxContainer" parent="StartMenu/PanelContainer"]
 layout_mode = 2
+theme_override_constants/separation = 14
 alignment = 1
 
-[node name="Button" type="Button" parent="CanvasLayer/PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(130, 0)
+[node name="Button" type="Button" parent="StartMenu/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 40
+toggle_mode = true
+button_group = SubResource("ButtonGroup_731rl")
 text = "Beginner"
 
-[node name="Button2" type="Button" parent="CanvasLayer/PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(130, 0)
+[node name="Button2" type="Button" parent="StartMenu/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 40
+toggle_mode = true
+button_group = SubResource("ButtonGroup_uufrn")
 text = "Intermediate"
 
-[node name="Button3" type="Button" parent="CanvasLayer/PanelContainer/VBoxContainer"]
-custom_minimum_size = Vector2(130, 0)
+[node name="Button3" type="Button" parent="StartMenu/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(270, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 theme_override_font_sizes/font_size = 40
+toggle_mode = true
+button_group = SubResource("ButtonGroup_q0rm3")
 text = "Expert
 "
+
+[node name="HSeparator" type="HSeparator" parent="StartMenu/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="LevelLabel" type="Label" parent="StartMenu/PanelContainer/VBoxContainer"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 35
+text = "Press Start to compete in Beginner mode"
+horizontal_alignment = 1
+
+[node name="ColorRect" type="ColorRect" parent="StartMenu/PanelContainer/VBoxContainer/LevelLabel"]
+show_behind_parent = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.5251013, 0.5251013, 0.5251013, 1)
+
+[node name="HSeparator2" type="HSeparator" parent="StartMenu/PanelContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 8)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="StartMenu/PanelContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 48
+text = "Start Playing!
+"
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+&"": SubResource("AnimationLibrary_6lwxe")
+}
+
+[connection signal="ready_to_start" from="StartMenu" to="." method="_on_start_menu_ready_to_start"]
+[connection signal="pressed" from="StartMenu/PanelContainer/VBoxContainer/Button" to="StartMenu" method="set_level" binds= [0]]
+[connection signal="pressed" from="StartMenu/PanelContainer/VBoxContainer/Button2" to="StartMenu" method="set_level" binds= [1]]
+[connection signal="pressed" from="StartMenu/PanelContainer/VBoxContainer/Button3" to="StartMenu" method="set_level" binds= [2]]
+[connection signal="pressed" from="StartMenu/PanelContainer/VBoxContainer/StartButton" to="StartMenu" method="_on_start_button_pressed"]

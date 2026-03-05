@@ -5,8 +5,9 @@ var piece_initial_position: Vector2
 var column_zero_centre_x: float
 var yellow_piece: Sprite2D
 var ai_wrapper_script = load("res://AiWrapper.cs")
-var ai_wrapper = ai_wrapper_script.new(10000, 1.414)
+var ai_wrapper
 var played_pieces = []
+@export var iterations = [1000, 10000, 100000]
 
 # Game play variables
 var player_column: int
@@ -18,7 +19,6 @@ var human_wins:int = 0
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	ai_wrapper.connect("MoveCalculated", _on_ai_wrapper_move_calculated)
 	piece_radius = $PlayerPiece.radius
 	piece_initial_position = $PlayerPiece.position
 	# Get the x value of the centre of column 0
@@ -28,6 +28,13 @@ func _ready() -> void:
 	$StartAgainButton.hide()
 	$PlayerPiece.state = $PlayerPiece.State.FINISHED
 	#start_human()
+
+func start(level: int) -> void:
+	# Set up the AI wrapper
+	ai_wrapper = ai_wrapper_script.new(iterations[level], 1.414)
+	ai_wrapper.connect("MoveCalculated", _on_ai_wrapper_move_calculated)
+	# Start the game
+	start_human()
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:

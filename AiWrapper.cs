@@ -4,11 +4,11 @@ using Godot;
 using System;
 using Connect4Node = MctsEngine.MctsNode<Connect4GameEngine.Connect4GameState, int>;
 
-public partial class AiWrapper(int iterations, double temperature) : Node
+public partial class AiWrapper : Node
 {
     [Signal]
     public delegate void MoveCalculatedEventHandler(int move);
-    public Connect4Bot MctsBot { get; private set; } = new Connect4Bot(iterations, temperature);
+    public Connect4Bot MctsBot { get; private set; }
     public Connect4Node? RootNode { get; private set; }
 
     public bool GameOver => RootNode != null && RootNode.GameState.GameOver;
@@ -27,6 +27,13 @@ public partial class AiWrapper(int iterations, double temperature) : Node
                 return 0; // Draw
         }
     }
+
+    public AiWrapper(int iterations, double temperature)
+    {
+        MctsBot = new Connect4Bot(iterations, temperature);
+    }
+
+    public AiWrapper() : this(1000, 1.4) { }
 
     /// <summary>
     /// Get the computer's move when it is starting

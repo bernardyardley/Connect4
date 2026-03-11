@@ -15,7 +15,6 @@ func _process(_delta: float) -> void:
 	pass
 
 func set_level(l: int) -> void:
-	print("Got click to level " + str(l))
 	level = l
 	%LevelLabel.text = "Press Start to compete in " + level_names[l] + " mode"
 
